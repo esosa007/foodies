@@ -1,0 +1,19 @@
+h1 {
+    text-align: center;
+};
+
+.test {
+    background-color: aquamarine;
+    width: 100%;
+    height: 200px;
+}
+
+.indexImages {
+    max-width: 300px;
+}
+.text-light {
+    text-decoration-color: aliceblue;
+}
+footer {
+    height: 50px;
+}

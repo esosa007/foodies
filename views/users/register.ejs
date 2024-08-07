@@ -1,0 +1,21 @@
+<% layout('layouts/boilerplate') %>
+
+    <h1 class="mt-5">Register an Account</h1>
+
+    <form action="/signin" method="POST">
+        <div class="mt-3">
+            <label class="form-label" for="name">Username</label>
+            <input id="name" class="form-control" type="text" name="name">
+        </div>
+        <div class="mt-3">
+            <label class="form-label" for="password">Password</label>
+            <input id="password" class="form-control" type="text" name="password">
+        </div>
+        <div class="mt-3">
+            <label class="form-label" for="email">Email</label>
+            <input id="email" class="form-control" type="email" name="email">
+        </div>
+        <div class="mt-3">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form>

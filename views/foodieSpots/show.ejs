@@ -1,0 +1,17 @@
+<% layout('layouts/boilerplate') %>
+
+    <h1>Welcome to <%= foundSpot.name.slice(0,1).toUpperCase() + foundSpot.name.slice(1) %> Page!</h1>
+
+    <div class="card mb-5" style="width: 18rem;">
+        <img src="<%= foundSpot.imageURL %>" class="card-img-top" alt="food image">
+        <div class="card-body">
+            <h5 class="card-title"><%= foundSpot.name %></h5>
+            <p class="card-text">Located in <%= foundSpot.location %></p>
+            <p class="card-text">Estimated Cost: $<%= foundSpot.cost %></p>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="/spots/<%= foundSpot.id %>/edit" class="btn btn-primary">Edit Spot</a>
+            <form class="d-inline" action="/spots/<%= foundSpot.id %>?_method=DELETE" method="POST">
+                <button class="btn btn-danger">Delete Spot</button>
+            </form>
+        </div>
+    </div>
