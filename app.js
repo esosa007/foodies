@@ -37,15 +37,15 @@ const verifyPassword = (req, res, next) => {
 };
 
 
-app.get('/', async (req, res) => {
+app.get('/', catchAsync(async (req, res) => {
     res.render('home');
-});
+}));
 
 
-app.get('/spots', async (req, res) => {
+app.get('/spots', catchAsync(async (req, res) => {
     const allSpots = await Spot.find({});
     res.render('foodieSpots/index', { allSpots })
-});
+}));
 
 
 app.get('/spots/new', verifyPassword, (req, res) => {
@@ -61,21 +61,21 @@ app.post('/spots', catchAsync(async (req, res, next) => {
 }));
 
 
-app.get('/spots/:id', async (req, res, next) => {
+app.get('/spots/:id', catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const foundSpot = await Spot.findById(id);
     if(!foundSpot) {
         next(new ExpressError('Not Found', 404))
     }
     res.render('foodieSpots/show', { foundSpot })
-});
+}));
 
 
-app.get('/spots/:id/edit', async (req, res) => {
+app.get('/spots/:id/edit', catchAsync(async (req, res) => {
     const { id } = req.params;
     const foundSpot = await Spot.findById(id);
     res.render('foodieSpots/edit', { foundSpot });
-});
+}));
 
 
 app.patch('/spots/:id', catchAsync(async (req, res) => {
@@ -87,11 +87,11 @@ app.patch('/spots/:id', catchAsync(async (req, res) => {
 }));
 
 
-app.delete('/spots/:id', async (req, res) => {
+app.delete('/spots/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     const foundSpot = await Spot.findByIdAndDelete(id);
     res.redirect('/spots')
-});
+}));
 
 
 app.get('/users/register', (req, res) => {
@@ -107,15 +107,15 @@ app.get('/error', (req, res) => {
     chicken.fly();
 })
 
-app.get('*', (req, res) => {
+app.all('*', (req, res) => {
     res.redirect('/spots')
 });
 
 
 app.use((err, req, res, next) => {
-    const { status = 500, message = 'Generic Error' } = err;
-    console.log(err)
-    res.status(status).send(message)
+    const { status = 500, message = 'Oops, something went wrong' } = err;
+    const error = err;
+    res.render('error', { status, message, error })
 });
 
 
