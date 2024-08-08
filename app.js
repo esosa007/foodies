@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const Spot = require('./models/spots.js');
 const ExpressError = require('./utils/ExpressError.js');
 const catchAsync = require('./utils/catchAsync.js');
+const { spotSchema } = require('./schemas.js');
+
 
 mongoose.connect('mongodb://localhost:27017/foodies');
 
@@ -48,16 +50,19 @@ app.get('/spots', catchAsync(async (req, res) => {
 }));
 
 
-app.get('/spots/new', verifyPassword, (req, res) => {
+app.get('/spots/new', (req, res) => {
     res.render('foodieSpots/new');
 });
 
 
 app.post('/spots', catchAsync(async (req, res, next) => {
-        const { name, location, imageURL, cost } = req.body;
-        const newSpot = new Spot({ name, location, imageURL, cost });
-        await newSpot.save();
-        res.redirect(`/spots/${ newSpot._id }`);
+    const { error } = spotSchema.validate(req.body);
+    if(error) {
+        next(new ExpressError('Invalid Data Entry', 400))
+    }
+    const newSpot = new Spot(req.body);
+    await newSpot.save();
+    res.redirect(`/spots/${ newSpot._id }`);
 }));
 
 
