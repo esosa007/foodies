@@ -26,3 +26,6 @@ footer {
     padding: 10px;
     word-wrap: break-word;
 }
+textarea {
+    height: 100px;
+}

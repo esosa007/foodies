@@ -10,6 +10,10 @@ const SpotSchema = new Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String,
+        required: true
+    },
     imageURL: String,
     cost: {
         type: Number,

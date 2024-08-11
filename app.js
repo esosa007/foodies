@@ -9,6 +9,7 @@ const Spot = require('./models/spots.js');
 const ExpressError = require('./utils/ExpressError.js');
 const catchAsync = require('./utils/catchAsync.js');
 const { spotSchema } = require('./schemas.js');
+const { validateSpot } = require('./middlewares.js');
 
 
 mongoose.connect('mongodb://localhost:27017/foodies');
@@ -55,11 +56,7 @@ app.get('/spots/new', (req, res) => {
 });
 
 
-app.post('/spots', catchAsync(async (req, res, next) => {
-    const { error } = spotSchema.validate(req.body);
-    if(error) {
-        next(new ExpressError('Invalid Data Entry', 400))
-    }
+app.post('/spots', validateSpot, catchAsync(async (req, res, next) => {
     const newSpot = new Spot(req.body);
     await newSpot.save();
     res.redirect(`/spots/${ newSpot._id }`);
@@ -83,7 +80,7 @@ app.get('/spots/:id/edit', catchAsync(async (req, res) => {
 }));
 
 
-app.patch('/spots/:id', catchAsync(async (req, res) => {
+app.patch('/spots/:id', validateSpot, catchAsync(async (req, res) => {
     const { id } = req.params;
     const { name, location, cost } = req.body;
     const foundSpot = await Spot.findByIdAndUpdate(id, { name, location, cost });
