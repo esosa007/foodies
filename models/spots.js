@@ -22,4 +22,9 @@ const SpotSchema = new Schema({
     }
 });
 
+SpotSchema.pre('findOneAndUpdate', function(next) {
+    
+    next();
+});
+
 module.exports = mongoose.model('Spot', SpotSchema);

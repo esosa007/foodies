@@ -1,8 +1,8 @@
 <% layout('layouts/boilerplate') %>
 
     <h1>Welcome to <%= foundSpot.name.slice(0,1).toUpperCase() + foundSpot.name.slice(1) %> Page!</h1>
-
-    <div class="card mb-5" style="width: 18rem;">
+<div class="row">
+    <div class="col-8 card mb-5" style="width: 18rem;">
         <img src="<%= foundSpot.imageURL %>" class="card-img-top" alt="food image">
         <div class="card-body">
             <h5 class="card-title"><%= foundSpot.name %></h5>
@@ -19,3 +19,10 @@
             </form>
         </div>
     </div>
+    <div class="col-4">
+        <h3 class="text-center">Reviews</h3>
+        <div class="">
+            <p>Review Here:</p>
+        </div>
+    </div>
+</div>

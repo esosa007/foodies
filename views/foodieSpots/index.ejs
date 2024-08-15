@@ -1,6 +1,8 @@
 <% layout('layouts/boilerplate') %>
 
 <h1 class="mt-3">Foodies Map</h1>
+<div class="row">
+  <div class="col-md-8">
     <% for(let spot of allSpots) { %>
         <div class="card mb-3" style="max-width: 750px;">
             <div class="row g-0">
@@ -23,3 +25,5 @@
             </div>
         </div>
     <% } %>
+  </div>
+</div>

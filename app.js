@@ -67,9 +67,10 @@ app.get('/spots/:id', catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const foundSpot = await Spot.findById(id);
     if(!foundSpot) {
-        next(new ExpressError('Not Found', 404))
+        next(new ExpressError('Spot Not Found', 404))
+    } else {
+        res.render('foodieSpots/show', { foundSpot });
     }
-    res.render('foodieSpots/show', { foundSpot })
 }));
 
 
@@ -82,10 +83,9 @@ app.get('/spots/:id/edit', catchAsync(async (req, res) => {
 
 app.patch('/spots/:id', validateSpot, catchAsync(async (req, res) => {
     const { id } = req.params;
-    const { name, location, cost } = req.body;
-    const foundSpot = await Spot.findByIdAndUpdate(id, { name, location, cost });
-    foundSpot.save()
-    res.redirect('/spots')
+    const foundSpot = await Spot.findByIdAndUpdate(id, req.body, { runValidators: false });
+    await foundSpot.save();
+    res.redirect(`/spots/${foundSpot._id}`);
 }));
 
 
@@ -105,19 +105,15 @@ app.get('/users/login', (req, res) => {
     res.render('users/login')
 });
 
-app.get('/error', (req, res) => {
-    chicken.fly();
-})
 
-app.all('*', (req, res) => {
-    res.redirect('/spots')
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Oops, Page Not Found!', 404))
 });
 
 
 app.use((err, req, res, next) => {
     const { status = 500, message = 'Oops, something went wrong' } = err;
-    const error = err;
-    res.render('error', { status, message, error })
+    res.render('error', { status, message, err })
 });
 
 
