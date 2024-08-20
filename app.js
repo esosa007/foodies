@@ -6,6 +6,8 @@ const { serialize } = require('v8');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const Spot = require('./models/spots.js');
+const Review = require('./models/reviews.js');
+const User = require('./models/users.js');
 const ExpressError = require('./utils/ExpressError.js');
 const catchAsync = require('./utils/catchAsync.js');
 const { spotSchema } = require('./schemas.js');
@@ -31,15 +33,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
 
-const verifyPassword = (req, res, next) => {
-    const { password } = req.query;
-    if(password !== 'hotdog') {
-        throw new ExpressError('Invalid Password', 401)
-    }
-    next();
-};
-
-
 app.get('/', catchAsync(async (req, res) => {
     res.render('home');
 }));
@@ -63,9 +56,20 @@ app.post('/spots', validateSpot, catchAsync(async (req, res, next) => {
 }));
 
 
-app.get('/spots/:id', catchAsync(async (req, res, next) => {
+app.post('/spots/:id/reviews', catchAsync(async (req, res, next) => {
     const { id } = req.params;
     const foundSpot = await Spot.findById(id);
+    const newReview = new Review(req.body);
+    foundSpot.reviews.push(newReview._id)
+    await newReview.save();
+    await foundSpot.save();
+    res.redirect(`/spots/${ foundSpot._id }`);
+}));
+
+
+app.get('/spots/:id', catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const foundSpot = await Spot.findById(id).populate('reviews');
     if(!foundSpot) {
         next(new ExpressError('Spot Not Found', 404))
     } else {
@@ -96,10 +100,16 @@ app.delete('/spots/:id', catchAsync(async (req, res) => {
 }));
 
 
-app.get('/users/register', (req, res) => {
+app.get('/users/register', catchAsync(async(req, res) => {
     res.render('users/register')
-});
+}));
 
+
+app.post('/users', catchAsync(async(req, res, next) => {
+    const newUser = new User(req.body);
+    await newUser.save()
+    res.redirect('/spots');
+}));
 
 app.get('/users/login', (req, res) => {
     res.render('users/login')

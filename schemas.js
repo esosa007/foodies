@@ -13,3 +13,8 @@ module.exports.userSchema = Joi.object({
     password: Joi.string().required(),
     email: Joi.string().email().required()
 });
+
+module.exports.reviewSchema = Joi.object({
+    review: Joi.string().required(),
+    rating: Joi.number().min(1).max(5).required()
+});

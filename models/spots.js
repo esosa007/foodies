@@ -19,7 +19,13 @@ const SpotSchema = new Schema({
         type: Number,
         required: true,
         min: 0
-    }
+    },
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 });
 
 SpotSchema.pre('findOneAndUpdate', function(next) {

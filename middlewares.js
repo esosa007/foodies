@@ -1,4 +1,4 @@
-const { spotSchema, userSchema } = require("./schemas");
+const { spotSchema, userSchema, reviewSchema } = require("./schemas");
 const ExpressError = require("./utils/ExpressError");
 
 module.exports.validateSpot = (req, res, next) => {
@@ -13,6 +13,16 @@ module.exports.validateSpot = (req, res, next) => {
 
 module.exports.validateUser = (req, res, next) => {
     const { error } = userSchema.validate(req.body);
+    if(error) {
+        const msg = error.details.map(el => el.message).join(',');
+        next(new ExpressError(msg, 500))
+    } else {
+        next()
+    };
+};
+
+module.exports.validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     if(error) {
         const msg = error.details.map(el => el.message).join(',');
         next(new ExpressError(msg, 500))
