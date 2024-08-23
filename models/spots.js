@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
+const Review = require('./reviews');
+const reviews = require('./reviews');
 
 const SpotSchema = new Schema({
     name: {
@@ -28,9 +30,10 @@ const SpotSchema = new Schema({
     ]
 });
 
-SpotSchema.pre('findOneAndUpdate', function(next) {
-    
-    next();
-});
+SpotSchema.post('findOneAndDelete', async(spot) => {
+    if(spot.reviews.length) {
+        const res = await Review.deleteMany({ _id: { $in: spot.reviews}});
+    }
+}); 
 
 module.exports = mongoose.model('Spot', SpotSchema);

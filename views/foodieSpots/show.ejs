@@ -37,14 +37,20 @@
             </div>
        </form>
        <h3 class="mt-5">Reviews:</h3>
+       <div>
        <% for(let i = 0; i < foundSpot.reviews.length; i++) { %>
         <div class="card mb-3" style="max-width: 18rem;">
-            <div class="card-header">Author: Jr</div>
+            <div class="card-header d-flex justify-content-between">Author: Jr
+                <form class="d-inline" action="/spots/<%= foundSpot.id %>/reviews/<%= foundSpot.reviews[i].id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-sm btn-danger">x</button>
+                </form>
+            </div>
             <div class="card-body">
             <h5 class="card-title">Rating: <%= foundSpot.reviews[i].rating %></h5>
             <p class="card-text"><%= foundSpot.reviews[i].body %></p>
             </div>
         </div>
       <% } %>
+       </div>
     </div>
 </div>  
