@@ -15,7 +15,8 @@ router.post('/', catchAsync(async(req, res, next) => {
 }));
 
 router.get('/login', (req, res) => {
-    res.render('users/login')
+    res.cookie('name', 'Junior');
+    res.redirect('/spots');
 });
 
 

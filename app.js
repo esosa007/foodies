@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const engine = require('ejs-mate');
-const { serialize } = require('v8');
+// const { serialize } = require('v8');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const Spot = require('./models/spots.js');
@@ -11,9 +11,10 @@ const User = require('./models/users.js');
 const spotRoutes = require('./routes/spots.js');
 const reviewRoutes = require('./routes/reviews.js');
 const userRoutes = require('./routes/users.js');
+const session = require('express-session');
+const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError.js');
 const catchAsync = require('./utils/catchAsync.js');
-const router = express.Router();
 
 
 mongoose.connect('mongodb://localhost:27017/foodies');
@@ -31,8 +32,26 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use(methodOverride('_method'));
+
+const sessionOptions = {
+    secret: 'changethissecret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        httpOnly: true
+    }
+};
+app.use(session(sessionOptions));
+app.use(flash())
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error')
+    next()
+});
 
 
 app.get('/', catchAsync(async (req, res) => {

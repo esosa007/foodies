@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Spot = require('../models/spots');
+const User = require('../models/users');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
 const { validateSpot } = require('../middlewares')
@@ -14,6 +15,7 @@ router.route('/')
     .post(validateSpot, catchAsync(async (req, res, next) => {
         const newSpot = new Spot(req.body);
         await newSpot.save();
+        req.flash('success', 'You successfully created a new Spot!')
         res.redirect(`/spots/${newSpot._id}`);
     }));
 
@@ -28,7 +30,9 @@ router.route('/:id')
         const { id } = req.params;
         const foundSpot = await Spot.findById(id).populate('reviews');
         if (!foundSpot) {
-            next(new ExpressError('Spot Not Found', 404))
+            req.flash('error', 'Oops, Spot not found!')
+            res.redirect('/spots')
+            //next(new ExpressError('Spot Not Found', 404))
         } else {
             res.render('foodieSpots/show', { foundSpot });
         }
@@ -37,11 +41,13 @@ router.route('/:id')
         const { id } = req.params;
         const foundSpot = await Spot.findByIdAndUpdate(id, req.body, { runValidators: false });
         await foundSpot.save();
+        req.flash('success', 'You successfully modified a Spot!')
         res.redirect(`/spots/${foundSpot._id}`);
     }))
     .delete(catchAsync(async (req, res) => {
         const { id } = req.params;
         const foundSpot = await Spot.findByIdAndDelete(id);
+        req.flash('success', 'You successfully deleted a Spot!')
         res.redirect('/spots')
     }));
 
