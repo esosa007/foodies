@@ -29,3 +29,6 @@ footer {
 textarea {
     height: 100px;
 }
+.alert {
+    max-width: 100%;
+}

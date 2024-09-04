@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Spot = require('../models/spots');
-const User = require('../models/users');
 const catchAsync = require('../utils/catchAsync');
 const ExpressError = require('../utils/ExpressError');
-const { validateSpot } = require('../middlewares')
+const { validateSpot, isLoggedIn } = require('../middlewares')
 
 
 router.route('/')
@@ -20,7 +19,7 @@ router.route('/')
     }));
 
 
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render('foodieSpots/new');
 });
 
@@ -37,14 +36,14 @@ router.route('/:id')
             res.render('foodieSpots/show', { foundSpot });
         }
     }))
-    .patch(validateSpot, catchAsync(async (req, res) => {
+    .patch(validateSpot, isLoggedIn, catchAsync(async (req, res) => {
         const { id } = req.params;
         const foundSpot = await Spot.findByIdAndUpdate(id, req.body, { runValidators: false });
         await foundSpot.save();
         req.flash('success', 'You successfully modified a Spot!')
         res.redirect(`/spots/${foundSpot._id}`);
     }))
-    .delete(catchAsync(async (req, res) => {
+    .delete(isLoggedIn, catchAsync(async (req, res) => {
         const { id } = req.params;
         const foundSpot = await Spot.findByIdAndDelete(id);
         req.flash('success', 'You successfully deleted a Spot!')
@@ -52,7 +51,7 @@ router.route('/:id')
     }));
 
     
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     const foundSpot = await Spot.findById(id);
     res.render('foodieSpots/edit', { foundSpot });

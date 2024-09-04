@@ -30,3 +30,11 @@ module.exports.validateReview = (req, res, next) => {
         next()
     };
 };
+
+module.exports.isLoggedIn = (req, res, next) => {
+    if(!req.isAuthenticated()) {
+    req.flash('error', 'You must be logged in to add a new Spot!');
+    return res.redirect('/users/login');
+    }
+    next()
+};
