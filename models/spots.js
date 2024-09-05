@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 const Review = require('./reviews');
-const reviews = require('./reviews');
+
 
 const SpotSchema = new Schema({
     name: {
@@ -21,6 +21,10 @@ const SpotSchema = new Schema({
         type: Number,
         required: true,
         min: 0
+    },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     },
     reviews: [
         {

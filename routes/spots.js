@@ -13,6 +13,8 @@ router.route('/')
     }))
     .post(validateSpot, catchAsync(async (req, res, next) => {
         const newSpot = new Spot(req.body);
+        newSpot.author = req.user._id;
+        console.log(newSpot)
         await newSpot.save();
         req.flash('success', 'You successfully created a new Spot!')
         res.redirect(`/spots/${newSpot._id}`);
@@ -27,7 +29,7 @@ router.get('/new', isLoggedIn, (req, res) => {
 router.route('/:id')
     .get(catchAsync(async (req, res, next) => {
         const { id } = req.params;
-        const foundSpot = await Spot.findById(id).populate('reviews');
+        const foundSpot = await Spot.findById(id).populate('reviews').populate('author');
         if (!foundSpot) {
             req.flash('error', 'Oops, Spot not found!')
             res.redirect('/spots')

@@ -13,11 +13,14 @@
         <div class="navbar-nav">
           <a class="nav-link" href="/spots">All Spots</a>
           <a class="nav-link" href="/spots/new">Create a Spot</a>
-          <a class="nav-link" href="/users/login">Login</a>
-          <a class="nav-link" href="/users/register">Register</a>
-          <form action="/users/logout" method="POST">
-            <button class="nav-link" href="/spots">Logout</button>
-          </form>
+          <% if(!currentUser) { %>
+            <a class="nav-link" href="/users/login">Login</a>
+            <a class="nav-link" href="/users/register">Register</a>
+          <% } else { %>
+            <form action="/users/logout" method="POST">
+              <button class="nav-link" href="/spots">Logout</button>
+            </form>
+          <% } %>
         </div>
       </div>
     </div>

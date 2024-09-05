@@ -33,8 +33,16 @@ module.exports.validateReview = (req, res, next) => {
 
 module.exports.isLoggedIn = (req, res, next) => {
     if(!req.isAuthenticated()) {
-    req.flash('error', 'You must be logged in to add a new Spot!');
-    return res.redirect('/users/login');
+        // req.session.returnTo = req.originalUrl;
+        req.flash('error', 'You must be logged in to add a new Spot!');
+        return res.redirect('/users/login');
     }
     next()
 };
+
+module.exports.storeReturnTo = (req, res, next) => {
+    if (req.session.returnTo) {
+        res.locals.returnTo = req.session.returnTo;
+    }
+    next();
+}

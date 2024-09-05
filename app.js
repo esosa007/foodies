@@ -14,6 +14,7 @@ const catchAsync = require('./utils/catchAsync.js');
 const User = require('./models/users.js');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const { cursorTo } = require('readline');
 
 
 mongoose.connect('mongodb://localhost:27017/foodies');
