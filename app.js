@@ -67,7 +67,7 @@ app.get('/', catchAsync(async (req, res) => {
 }));
 
 
-app.use('/spots', spotRoutes)
+app.use('/spots', spotRoutes);
 app.use('/spots/:id/reviews', reviewRoutes)
 app.use('/users', userRoutes);
 
