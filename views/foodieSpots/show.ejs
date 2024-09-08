@@ -8,6 +8,7 @@
                 <img src="<%= foundSpot.imageURL %>" class="card-img-top" alt="food image">
                 <div class="card-body">
                     <h5 class="card-title"><%= foundSpot.name %></h5>
+                    <p class="card-text">Spot created by: <%= foundSpot.author.username %></p>
                     <p class="card-text">Located in <%= foundSpot.location %></p>
                     <p class="card-text">Estimated Cost: $<%= foundSpot.cost %></p>
                     <% if(!foundSpot.description) { %>
@@ -16,8 +17,7 @@
                     <% } else { %>
                         <p class="card-text"><%= foundSpot.description %></p>
                     <% } %>
-                    <% if(currentUser) { %>
-                        <p><%= foundSpot.author.equals(currentUser) %></p>
+                    <% if(currentUser && foundSpot.author.equals(currentUser)) { %>
                         <a href="/spots/<%= foundSpot.id %>/edit" class="btn btn-primary">Edit Spot</a>
                         <form class="d-inline" action="/spots/<%= foundSpot.id %>?_method=DELETE" method="POST">
                             <button class="btn btn-danger">Delete Spot</button>
@@ -29,10 +29,12 @@
         <div class="col-4 col-lg-3">
             <form action="/spots/<%= foundSpot.id %>/reviews" method="POST" class="needs-validation" novalidate>
                 <% if(!currentUser) { %>
-                    <p>Login to Leave a Review!</p>
-                <% } else { %>
+                    <p class="card-text mt-3">Login to Leave a Review!</p>
+                <% } %>
                     <div class="mt-3">
-                        <label class="form-label" for="body"><strong>Leave A Review!</strong></label>
+                        <% if(currentUser) { %>
+                            <label class="form-label" for="body"><strong>Leave A Review!</strong></label>
+                        <% } %>                        
                         <textarea class="form-control" name="body" id="body" required></textarea>
                         <div class="valid-feedback">
                             Looks good!
@@ -48,14 +50,13 @@
                     <div class="mt-3">
                         <button class="btn btn-info">Submit</button>
                     </div>
-                <% } %>
+                    <h3 class="mt-5">Reviews:</h3>
             </form>
-            <h3 class="mt-5">Reviews:</h3>
             <div>
                 <% for(let i=0; i < foundSpot.reviews.length; i++) { %>
                     <div class="card mb-3" style="max-width: 18rem;">
-                        <div class="card-header d-flex justify-content-between">Author: Jr
-                            <% if(currentUser) { %>
+                        <div class="card-header d-flex justify-content-between">Author: <%= foundSpot.reviews[i].author.username %>
+                            <% if(currentUser && foundSpot.reviews[i].author.equals(currentUser)) { %>
                                 <form class="d-inline"
                                 action="/spots/<%= foundSpot.id %>/reviews/<%= foundSpot.reviews[i].id %>?_method=DELETE"
                                 method="POST">

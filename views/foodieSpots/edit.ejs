@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <h1>Edit Your Foodies Spot!</h1>
-        <form action="/spots/<%= foundSpot.id %>?_method=PATCH" method="POST" novalidate>
+        <form action="/spots/<%= foundSpot.id %>?_method=PUT" method="POST" novalidate>
             <div class="mt-3 col-8 col-md-6 m-auto">
                 <label for="name" class="form-label">Name:</label>
                 <input id="name" class="form-control" type="text" name="name" value="<%= foundSpot.name %>" required>

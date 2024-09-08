@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const { validateUser, storeReturnTo } = require('../middlewares');
+const { validateUser, storeReturnTo, isLoggedIn } = require('../middlewares');
 const passport = require('passport');
 const { createUser, loginUser, logOutUser, renderRegister, renderLogin } = require('../controllers/users');
 
@@ -11,7 +11,7 @@ router.post('/register', validateUser, createUser);
 
 router.get('/login', renderLogin);
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/users/login'}), loginUser);
+router.post('/login', storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/users/login'}), loginUser);
 
 router.post('/logout', logOutUser);
 

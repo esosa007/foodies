@@ -1,63 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const Spot = require('../models/spots');
-const catchAsync = require('../utils/catchAsync');
-const ExpressError = require('../utils/ExpressError');
-const { validateSpot, isLoggedIn } = require('../middlewares')
+const { validateSpot, isLoggedIn, isAuthor } = require('../middlewares');
+const { renderAllSpots, createSpot, renderNew, renderSpot, updateSpot, deleteSpot, renderEdit } = require('../controllers/spots');
 
 
 router.route('/')
-    .get(catchAsync(async (req, res) => {
-        const allSpots = await Spot.find({});
-        res.render('foodieSpots/index', { allSpots })
-    }))
-    .post(validateSpot, catchAsync(async (req, res, next) => {
-        const newSpot = new Spot(req.body);
-        newSpot.author = req.user._id;
-        console.log(newSpot)
-        await newSpot.save();
-        req.flash('success', 'You successfully created a new Spot!')
-        res.redirect(`/spots/${newSpot._id}`);
-    }));
+    .get(renderAllSpots)
+    .post(isLoggedIn, validateSpot, createSpot);
 
 
-router.get('/new', isLoggedIn, (req, res) => {
-    res.render('foodieSpots/new');
-});
+router.get('/new', isLoggedIn, renderNew);
 
 
 router.route('/:id')
-    .get(catchAsync(async (req, res, next) => {
-        const { id } = req.params;
-        const foundSpot = await Spot.findById(id).populate('reviews').populate('author');
-        if (!foundSpot) {
-            req.flash('error', 'Oops, Spot not found!')
-            res.redirect('/spots')
-            //next(new ExpressError('Spot Not Found', 404))
-        } else {
-            res.render('foodieSpots/show', { foundSpot });
-        }
-    }))
-    .patch(validateSpot, isLoggedIn, catchAsync(async (req, res) => {
-        const { id } = req.params;
-        const foundSpot = await Spot.findByIdAndUpdate(id, req.body, { runValidators: false });
-        await foundSpot.save();
-        req.flash('success', 'You successfully modified a Spot!')
-        res.redirect(`/spots/${foundSpot._id}`);
-    }))
-    .delete(isLoggedIn, catchAsync(async (req, res) => {
-        const { id } = req.params;
-        const foundSpot = await Spot.findByIdAndDelete(id);
-        req.flash('success', 'You successfully deleted a Spot!')
-        res.redirect('/spots')
-    }));
+    .get(renderSpot)
+    .put(isLoggedIn, isAuthor, validateSpot, updateSpot)
+    .delete(isLoggedIn, isAuthor, deleteSpot);
 
     
-router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const foundSpot = await Spot.findById(id);
-    res.render('foodieSpots/edit', { foundSpot });
-}));
+router.get('/:id/edit', isLoggedIn, isAuthor, renderEdit);
 
 
 module.exports = router;

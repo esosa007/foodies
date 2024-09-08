@@ -20,6 +20,7 @@ const seedHelper = async () => {
             location: `${cities[randomNum].city}`,
             imageURL: `${helpers.descriptors[randomNum].image}`,
             cost: randomNum,
+            description: 'The best in town!',
             author: '66d90664783971196209dab9'
         })
         await spots.save()
