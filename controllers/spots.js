@@ -9,7 +9,7 @@ module.exports.renderAllSpots = catchAsync(async (req, res) => {
 module.exports.createSpot = catchAsync(async (req, res, next) => {
     const newSpot = new Spot(req.body);
     newSpot.author = req.user._id;
-    console.log(newSpot)
+    console.log(req.files)
     await newSpot.save();
     req.flash('success', 'You successfully created a new Spot!')
     res.redirect(`/spots/${newSpot._id}`);

@@ -3,6 +3,7 @@ const Review = require('./models/reviews');
 const { spotSchema, userSchema, reviewSchema } = require("./schemas");
 const ExpressError = require("./utils/ExpressError");
 
+
 module.exports.validateSpot = (req, res, next) => {
     const { error } = spotSchema.validate(req.body);
     if(error) {

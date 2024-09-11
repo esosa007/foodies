@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { validateSpot, isLoggedIn, isAuthor } = require('../middlewares');
 const { renderAllSpots, createSpot, renderNew, renderSpot, updateSpot, deleteSpot, renderEdit } = require('../controllers/spots');
-
+const multer = require('multer');
+const { storage } = require('../cloudinary');
+const upload = multer({ storage });
 
 router.route('/')
     .get(renderAllSpots)
-    .post(isLoggedIn, validateSpot, createSpot);
+    .post(isLoggedIn, upload.array('images'), validateSpot, createSpot);
 
 
 router.get('/new', isLoggedIn, renderNew);
