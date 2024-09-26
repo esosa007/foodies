@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { validateSpot, isLoggedIn, isAuthor } = require('../middlewares');
-const { renderAllSpots, createSpot, renderNew, renderSpot, updateSpot, deleteSpot, renderEdit } = require('../controllers/spots');
+const { renderAllSpots, createSpot, renderNew, renderSpot, updateSpot, deleteSpot, renderEdit, deleteImages } = require('../controllers/spots');
 const multer = require('multer');
 const { storage } = require('../cloudinary');
 const upload = multer({ storage });
@@ -16,11 +16,11 @@ router.get('/new', isLoggedIn, renderNew);
 
 router.route('/:id')
     .get(renderSpot)
-    .put(isLoggedIn, isAuthor, validateSpot, updateSpot)
+    .put(isLoggedIn, isAuthor, upload.array('images'), validateSpot, updateSpot)
     .delete(isLoggedIn, isAuthor, deleteSpot);
 
     
-router.get('/:id/edit', isLoggedIn, isAuthor, renderEdit);
+router.get('/:id/edit', isLoggedIn, isAuthor, renderEdit)
 
 
 module.exports = router;

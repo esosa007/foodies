@@ -5,7 +5,28 @@
     <div class="row justify-content-center">
         <div class="col-8 col-lg-6 mt-4">
             <div class="card">
-                <img src="<%= foundSpot.imageURL %>" class="card-img-top" alt="food image">
+                <div id="carousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                      <div class="carousel-item <%= foundSpot.images ? 'active' : '' %> ">
+                        <% if(foundSpot.imageURL) { %>
+                            <img src="<%= foundSpot.imageURL %>" class="card-img-top w-100" alt="food image">
+                        <% } else { %>
+                            <img src="<%= foundSpot.images[0].url %>" class="card-img-top w-100" alt="food image">
+                        <% } %>
+                      </div>
+                      <% if(foundSpot.images.length > 1) { %>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    <% } %>
+                  </div>
+                </div>
+                
                 <div class="card-body">
                     <h5 class="card-title"><%= foundSpot.name %></h5>
                     <p class="card-text">Spot created by: <%= foundSpot.author.username %></p>

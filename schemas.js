@@ -5,7 +5,8 @@ module.exports.spotSchema = Joi.object({
     location: Joi.string().required(),
     cost: Joi.number().min(0).required(),
     description: Joi.string().required(),
-    imageURL: Joi.string().required()
+    images: Joi.string(),
+    deleteImages: Joi.array()
 });
 
 module.exports.userSchema = Joi.object({

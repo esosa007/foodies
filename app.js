@@ -2,8 +2,6 @@ if(process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 };
 
-console.log(process.env.SECRET)
-
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -71,6 +69,13 @@ app.get('/', catchAsync(async (req, res) => {
     res.render('home');
 }));
 
+app.get('/test', (req, res) => {
+    res.render('../test')
+});
+
+app.post('/test', (req, res) => {
+    res.redirect('../test')
+});
 
 app.use('/spots', spotRoutes);
 app.use('/spots/:id/reviews', reviewRoutes)
